@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_webrobot" default="compile.module.webrobot">
+  <dirname property="module.webrobot.basedir" file="${ant.file.module_webrobot}"/>
+  
+  <property name="module.jdk.home.webrobot" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.webrobot" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.webrobot" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.webrobot" value="-encoding GBK -source 8 ${compiler.args}"/>
+  
+  <property name="webrobot.output.dir" value="${module.webrobot.basedir}/out/production/webRobot"/>
+  <property name="webrobot.testoutput.dir" value="${module.webrobot.basedir}/out/test/webRobot"/>
+  
+  <path id="webrobot.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="webrobot.module.production.classpath">
+    <path refid="${module.jdk.classpath.webrobot}"/>
+    <path refid="library.jsoup-1.8.2.classpath"/>
+  </path>
+  
+  <path id="webrobot.runtime.production.module.classpath">
+    <pathelement location="${webrobot.output.dir}"/>
+    <path refid="library.jsoup-1.8.2.classpath"/>
+  </path>
+  
+  <path id="webrobot.module.classpath">
+    <path refid="${module.jdk.classpath.webrobot}"/>
+    <pathelement location="${webrobot.output.dir}"/>
+    <path refid="library.jsoup-1.8.2.classpath"/>
+  </path>
+  
+  <path id="webrobot.runtime.module.classpath">
+    <pathelement location="${webrobot.testoutput.dir}"/>
+    <pathelement location="${webrobot.output.dir}"/>
+    <path refid="library.jsoup-1.8.2.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.webrobot">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.webrobot">
+    <patternset refid="excluded.from.module.webrobot"/>
+  </patternset>
+  
+  <path id="webrobot.module.sourcepath">
+    <dirset dir="${module.webrobot.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.webrobot" depends="compile.module.webrobot.production,compile.module.webrobot.tests" description="Compile module webRobot"/>
+  
+  <target name="compile.module.webrobot.production" depends="register.custom.compilers" description="Compile module webRobot; production classes">
+    <mkdir dir="${webrobot.output.dir}"/>
+    <javac2 destdir="${webrobot.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.webrobot}/javac">
+      <compilerarg line="${compiler.args.webrobot}"/>
+      <bootclasspath refid="webrobot.module.bootclasspath"/>
+      <classpath refid="webrobot.module.production.classpath"/>
+      <src refid="webrobot.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.webrobot"/>
+    </javac2>
+    
+    <copy todir="${webrobot.output.dir}">
+      <fileset dir="${module.webrobot.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.webrobot.tests" depends="register.custom.compilers,compile.module.webrobot.production" description="compile module webRobot; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.webrobot" description="cleanup module">
+    <delete dir="${webrobot.output.dir}"/>
+    <delete dir="${webrobot.testoutput.dir}"/>
+  </target>
+</project>
