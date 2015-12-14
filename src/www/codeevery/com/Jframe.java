@@ -271,7 +271,19 @@ public class Jframe extends JFrame {
                                         if(rexText.equals("")){//如果不使用正则表达式，那么可以循环获得最后一个-1
                                             elements = elementMain.select(htmlDom.get(a));
                                             for(int f = 0;f<elements.size();f++){//循环读取最后一步的所有text添加进入列表
-                                                inHtmlList.add(elements.get(f).text());
+                                                if(!htmlDom.get(a).contains("=")&&htmlDom.get(a).contains("[")){
+                                                    Pattern pattern = Pattern.compile("\\[(.*?)\\]");
+                                                    Matcher matcher = pattern.matcher(htmlDom.get(a));
+                                                    String attr = null;
+                                                    if(matcher.find()) {
+                                                        attr = matcher.group(1);
+                                                    }else {
+                                                        JOptionPane.showMessageDialog(panel,"最后一个元素的属性值正则匹配出错，请检查");
+                                                    }
+                                                    inHtmlList.add(elements.get(f).attr(attr));
+                                                }else {
+                                                    inHtmlList.add(elements.get(f).text());
+                                                }
                                             }
                                         }else{//如果使用了正则表达式那么最后的索引不准是-1
                                             JOptionPane.showMessageDialog(panel, "同时使用正则表达式和htmldom那么最后一个索引不能是-1");
@@ -285,7 +297,20 @@ public class Jframe extends JFrame {
                                                 if(elements1.size()==0){
                                                     continue;
                                                 }else{
-                                                    temp = elements1.get(indexList.get(a)).text();
+
+                                                    if(!htmlDom.get(a).contains("=")&&htmlDom.get(a).contains("[")){
+                                                        Pattern pattern = Pattern.compile("\\[(.*?)\\]");
+                                                        Matcher matcher = pattern.matcher(htmlDom.get(a));
+                                                        String attr = null;
+                                                        if(matcher.find()) {
+                                                            attr = matcher.group(1);
+                                                        }else {
+                                                            JOptionPane.showMessageDialog(panel,"最后一个元素的属性值正则匹配出错，请检查");
+                                                        }
+                                                        temp = elements1.get(indexList.get(a)).attr(attr);
+                                                    }else {
+                                                        temp = elements1.get(indexList.get(a)).text();
+                                                    }
                                                 }
                                             }else {
                                                 temp = elements.get(y).select(htmlDom.get(a)).get(indexList.get(a)).outerHtml();

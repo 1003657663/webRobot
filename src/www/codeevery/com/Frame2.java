@@ -42,7 +42,7 @@ public class Frame2 extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                String help = "帮助:\n填入文件路径数据库路径和用户名密码"
+                String help = "帮助:\n填入文件路径数据库路径例如:localhost:3306/***和用户名密码"
                         +"下方的大块空白填的是sql语句，每一条语句占一行，回车换行\n"
                         +"如果读取的文件有2块数据比如用&&分隔的帖子标题数据和用户名数据\n"
                         +"要把帖子和用户插入表里语句是:insert into user values ($1[],$[]);\n"
